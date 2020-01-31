@@ -10,8 +10,8 @@ app.secret_key = 'HR2410'
 
 # Database connection
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'raunak'
-app.config['MYSQL_PASSWORD'] = '8089'
+app.config['MYSQL_USER'] = ''       # Enter your MySQL user
+app.config['MYSQL_PASSWORD'] = ''   # Enter your MYSQL password
 app.config['MYSQL_DB'] = 'remindaroo_db'
 
 # Initializing MySQL
