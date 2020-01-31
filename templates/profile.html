@@ -1,0 +1,24 @@
+{% extends 'header.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<h2>Profile</h2>
+<div>
+    <p>Here's a quick overview about your details</p>
+    <table>
+        <tr>
+            <td>Username:</td>
+            <td>{{ account['username'] }}</td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td>{{ account['password'] }}</td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>{{ account['email'] }}</td>
+        </tr>
+    </table>
+</div>
+{% endblock %}
