@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
+import datetime
 
 app = Flask(__name__)
 
@@ -94,6 +95,7 @@ def view():
     # checking if the user is already signed_in
     if 'loggedin' in session:
         return render_template('home.html', username=session['username'])
+
     # if user not logged in, then redirecting back to sign in page
     return redirect(url_for('authenticator'))
 
