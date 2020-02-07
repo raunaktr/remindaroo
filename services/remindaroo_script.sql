@@ -30,3 +30,5 @@ SELECT * FROM `remindaroo_db`.`r_app_details` LIMIT 1000;
 INSERT INTO `remindaroo_db`.`r_user_details` (`id`, `username`, `password`, `email`,`date`,`mobile`) VALUES (2, 'test', 'test', 'test@test.com','2020-02-04 02:18','09999999999');
 
 INSERT INTO `remindaroo_db`.`r_app_details` (`id`,`subject`,`description`,`status`) VALUES (2,'test subject', 'test description','True');
+
+UPDATE `r_app_details` SET status="FALSE" WHERE rem_id='1581018984.032295';

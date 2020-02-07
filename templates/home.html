@@ -8,17 +8,23 @@
     <p>Welcome, {{ username }} to the Remainder Application.</p>
 
     <div class="login">
-        <center>
-            <i class="fas fa-stopwatch"></i><span>
-        <a href="{{ url_for('set_reminder') }}">Set Reminder</a></span>
-        </center>
-    </div>
+        <i class="fas fa-stopwatch"></i>
+        <span><a href="{{ url_for('set_reminder') }}">Set Reminder</a></span>
 
-    <div class="login">
-        <center>
-            <i class="fas fa-stopwatch"></i><span>
-        <a href="{{ url_for('set_reminder') }}">Set Reminder</a></span>
-        </center>
+        <i class="fas fa-edit"></i>
+        <span><a href="{{ url_for('edit_reminder') }}">Modify Reminder</a></span>
+
+        <i class="fas "></i>
+        <span><a href="{{ url_for('delete_reminder') }}">Remove Reminder</a></span>
+
+        <i class="fas fa"></i>
+        <span><a href="{{ url_for('edit_reminder') }}">Disable Reminder</a></span>
+
+        <i class="fas fa"></i>
+        <span><a href="{{ url_for('edit_reminder') }}">Enable Reminder</a></span>
+
+        <i class="fas fa"></i>
+        <span><a href="{{ url_for('view_reminder') }}">View Reminder</a></span>
     </div>
 
 {% endblock %}
