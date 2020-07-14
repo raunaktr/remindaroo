@@ -5,15 +5,15 @@ import re
 import datetime
 import time
 
-app = Flask(__name__)
+app = Flask(__name__, root_path='app/')
 
 # Custom secret_key
 app.secret_key = "HR2410"
 
 # Database connection
 app.config["MYSQL_HOST"] = "localhost"
-app.config["MYSQL_USER"] = ""  # Enter your MySQL user
-app.config["MYSQL_PASSWORD"] = ""  # Enter your MYSQL password
+app.config["MYSQL_USER"] = "raunak"  # Enter your MySQL user
+app.config["MYSQL_PASSWORD"] = "8089"  # Enter your MYSQL password
 app.config["MYSQL_DB"] = "remindaroo_db"
 
 # Initializing MySQL
@@ -24,9 +24,9 @@ mysql = MySQL(app)
 def authenticator():
     msg = ""
     if (
-            request.method == "POST"
-            and "username" in request.form
-            and "password" in request.form
+        request.method == "POST"
+        and "username" in request.form
+        and "password" in request.form
     ):
         username = request.form["username"]
         password = request.form["password"]
@@ -68,11 +68,11 @@ def logout():
 def register():
     msg = ""
     if (
-            request.method == "POST"
-            and "username" in request.form
-            and "password" in request.form
-            and "email" in request.form
-            and "mobile" in request.form
+        request.method == "POST"
+        and "username" in request.form
+        and "password" in request.form
+        and "email" in request.form
+        and "mobile" in request.form
     ):
         username = request.form["username"]
         password = request.form["password"]
@@ -142,6 +142,7 @@ def rem_id_generator():
 def set_reminder():
     # check if user is loggedin
     if "loggedin" in session:
+        value = "Set a new"
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("SELECT * FROM r_user_details WHERE id=%s", [session["id"]])
         reminder = cursor.fetchone()
@@ -149,10 +150,10 @@ def set_reminder():
 
         msg = ""
         if (
-                request.method == "POST" and
-                "subject" in request.form and
-                "description" in request.form and
-                "r_date" in request.form
+            request.method == "POST"
+            and "subject" in request.form
+            and "description" in request.form
+            and "r_date" in request.form
         ):
             user_id = session["id"]
             rem_id = rem_id_generator()
@@ -164,43 +165,31 @@ def set_reminder():
 
             cursor.execute(
                 "INSERT INTO r_app_details(id,rem_id,subject,description,status,r_date) VALUES (%s,%s,%s,%s,%s,%s)",
-                details, )
+                details,
+            )
             mysql.connection.commit()
             msg = "Reminder is set!"
             return render_template("reminder.html", msg=msg)
         elif request.method == "POST":
             msg = "Please fill all the details"
             return render_template("reminder.html", msg=msg)
-        return render_template("reminder.html", reminder=reminder)
+        return render_template("reminder.html", reminder=reminder, value=value)
     # User is not loggedin redirect to login page
     return redirect(url_for("authenticator"))
 
 
-@app.route('/delete_reminder', methods=["GET", "POST"])
-def delete_reminder():
-    # check if the user is logged
-    if "loggedin" in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        # cursor.execute("SELECT * FROM r_user_details WHERE id=%s", [session['id']])
-        cursor.execute("SELECT * FROM r_app_details WHERE id=%s", [session['id']])
-        records = cursor.fetchall()
-        msg = ""
-
-        return render_template("reminder_extras.html", data=records)
-    # User is not loggedin redirect to login page
-    return redirect(url_for("authenticator"))
-
-
-@app.route('/view_reminder', methods=["GET"])
+@app.route("/view_reminder", methods=["GET", "POST"])
 def view_reminder():
     # check if the user is logged
     if "loggedin" in session:
+        value = "View"
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("SELECT * FROM r_user_details WHERE id=%s", [session["id"]])
+        cursor.execute("SELECT * FROM r_app_details WHERE id=%s", [session["id"]])
         records = cursor.fetchall()
+        print(session["id"])
         msg = ""
 
-        return render_template("reminder_extras.html", data=records)
+        return render_template("reminder_extras.html", data=records, value=value)
     # User is not loggedin redirect to login page
     return redirect(url_for("authenticator"))
 
@@ -209,17 +198,22 @@ def view_reminder():
 def edit_reminder():
     # check if the user is logged
     if "loggedin" in session:
+        value = "Modify"
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("SELECT * FROM r_user_details WHERE id=%s", [session["id"]])
-        reminder = cursor.fetchone()
-        print(session['id'])
+        cursor.execute("SELECT * FROM r_app_details WHERE id=%s", [session["id"]])
+        reminder = cursor.fetchall()
+        print(session["id"])
 
         msg = ""
+        # cursor.execute("SELECT * FROM r_app_details WHERE id=%s", [session["id"]])
+        # rem = cursor.fetchall()
+
         if (
-                request.method == "POST" and
-                "subject" in request.form and
-                "description" in request.form and
-                "r_date" in request.form):
+            request.method == "POST"
+            and "subject" in request.form
+            and "description" in request.form
+            and "r_date" in request.form
+        ):
 
             print([session["id"]])
 
@@ -230,15 +224,66 @@ def edit_reminder():
             desc = request.form["description"]
 
             details = (user_id, subject, desc, status, r_date)
-            cursor.execute("UPDATE r_app_details SET (%s,%s,%s,%s,%s)", details, )
+            cursor.execute(
+                "UPDATE r_app_details SET (%s,%s,%s,%s,%s)", details,
+            )
             mysql.connection.commit()
             msg = "successfully edited!"
-            return render_template("reminder.html", msg=msg)
+            return render_template("reminder_extra.html", msg=msg)
         elif request.method == "POST":
             msg = "Please fill all the details to be edited."
-            return render_template("reminder.html", msg=msg)
-        return render_template("reminder.html", reminder=reminder)
+            return render_template("reminder_extra.html", msg=msg)
+        return render_template("reminder_extras.html", data=reminder, value=value)
     # User is not loggedin redirect to login page
+    return redirect(url_for("authenticator"))
+
+
+@app.route("/delete_reminder", methods=["GET", "POST"])
+def delete_reminder():
+    # check if the user is logged
+    if "loggedin" in session:
+        value = "Delete"
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        # cursor.execute("SELECT * FROM r_user_details WHERE id=%s", [session['id']])
+        cursor.execute("SELECT * FROM r_app_details WHERE id=%s", [session["id"]])
+        records = cursor.fetchall()
+        msg = ""
+
+        if request.method == "POST" and request.form:
+            print("hello")
+
+        return render_template("reminder_extras.html", data=records, value=value)
+    # User is not loggedin redirect to login page
+    return redirect(url_for("authenticator"))
+
+
+@app.route("/disable_reminder", methods=["GET", "POST"])
+def disable_reminder():
+    # check if the user is logged
+    if "loggedin" in session:
+        value = "Disable"
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        # cursor.execute("SELECT * FROM r_user_details WHERE id=%s", [session['id']])
+        cursor.execute("SELECT * FROM r_app_details WHERE id=%s", [session["id"]])
+        records = cursor.fetchall()
+        msg = ""
+        return render_template("reminder_extras.html", data=records, value=value)
+        # User is not loggedin redirect to login page
+    return redirect(url_for("authenticator"))
+
+
+@app.route("/enable_reminder", methods=["GET", "POST"])
+def enable_reminder():
+    # check if the user is logged
+    if "loggedin" in session:
+        value = "Enable"
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        # cursor.execute("SELECT * FROM r_user_details WHERE id=%s", [session['id']])
+        cursor.execute("SELECT * FROM r_app_details WHERE id=%s", [session["id"]])
+        records = cursor.fetchall()
+        msg = ""
+        return render_template("reminder_extras.html", data=records, value=value)
+        # User is not loggedin redirect to login page
     return redirect(url_for("authenticator"))
 
 

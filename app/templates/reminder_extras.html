@@ -1,14 +1,14 @@
 {% extends 'header.html' %} {% block title %}Reminder{% endblock %}
 
 <head>
-    <link rel="stylesheet" href="{{ url_for('.static', filename='style.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('.static', filename='../static/style.css') }}"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"/>
 </head>
 <body>
 {% block content %}
 
     <div class="login">
-        <h1>Delete a reminder</h1>
+        <h1>{{ value }} a reminder</h1>
         {% for records in data %}
             <table>
                 <tr>{{ records['rem_id'] }}</tr>
@@ -27,6 +27,14 @@
                 <tr>
                     <td>Status:</td>
                     <td>{{ records['status'] }}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="{{ value }}"></label>
+                        {% if value!="view" %}
+                            <input type="submit" name="{{ value }}" value="{{ value }}" id="{{ value }}"/>
+                        {% endif %}
+                    </td>
                 </tr>
             </table><br>
         {% endfor %}

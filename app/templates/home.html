@@ -11,20 +11,24 @@
         <i class="fas fa-stopwatch"></i>
         <span><a href="{{ url_for('set_reminder') }}">Set Reminder</a></span>
 
+        <i class="fas fa-eye"></i>
+        <span><a href="{{ url_for('view_reminder') }}">View Reminder</a></span>
+    </div>
+
+    <div class="login">
         <i class="fas fa-edit"></i>
         <span><a href="{{ url_for('edit_reminder') }}">Modify Reminder</a></span>
 
-        <i class="fas "></i>
+        <i class="fas fa-trash"></i>
         <span><a href="{{ url_for('delete_reminder') }}">Remove Reminder</a></span>
+    </div>
+
+    <div class="login">
+        <i class="fas fa"></i>
+        <span><a href="{{ url_for('disable_reminder') }}">Disable Reminder</a></span>
 
         <i class="fas fa"></i>
-        <span><a href="{{ url_for('edit_reminder') }}">Disable Reminder</a></span>
-
-        <i class="fas fa"></i>
-        <span><a href="{{ url_for('edit_reminder') }}">Enable Reminder</a></span>
-
-        <i class="fas fa"></i>
-        <span><a href="{{ url_for('view_reminder') }}">View Reminder</a></span>
+        <span><a href="{{ url_for('enable_reminder') }}">Enable Reminder</a></span>
     </div>
 
 {% endblock %}
